@@ -3,12 +3,10 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Select from "../../components/Select/Select";
-import { categories } from "../../config";
 import { getOneNote, patchNote } from "../../service/NoteService";
 import { selectNotes, setActive } from "../../store/slices/notesSlice";
 import { useAppDispatch } from "../../store/store";
 import { INote } from "../../types";
-import { parseDates } from "../../utils/parseDates";
 import st from "./NotePage.module.scss";
 
 const NotePage = () => {
@@ -17,7 +15,7 @@ const NotePage = () => {
     const [note, setNote] = useState<INote | null>(null);
     const [showError, setShowError] = useState(false);
     const [isEditable, setIsEditable] = useState(false);
-    const [category, setCategory] = useState(categories[0]);
+    const [category, setCategory] = useState<string>("");
     const [content, setContent] = useState("");
     const [title, setTitle] = useState("");
     const titleRef = useRef<HTMLInputElement>(null);
@@ -44,6 +42,7 @@ const NotePage = () => {
         if (note) {
             setShowError(false);
             setTitle(note.title);
+            setCategory(note.category);
             setContent(note.content);
             if (!note.title) {
                 setShowError(true);
@@ -60,29 +59,21 @@ const NotePage = () => {
         );
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const prettifyTitle = title.replaceAll(/[^\w ]/g, "");
-        const slug = prettifyTitle.replaceAll(" ", "-").toLowerCase();
-
         if (note) {
-            const creationDate = note.creationDate;
-            const parsedDates = parseDates(content);
-
-            const newNote: INote = {
-                id: note.id,
-                title:
-                    prettifyTitle.at(0)?.toUpperCase() + prettifyTitle.slice(1),
+            const { data } = await patchNote(note.id, {
+                title,
                 content,
-                creationDate,
                 category,
-                parsedDates,
-                slug,
-            };
-            console.log(newNote)
-            note && dispatch(setActive(newNote));
-            setIsEditable(false);
+            });
+            if (data) {
+                dispatch(setActive(data));
+                setIsEditable(false);
+            } else {
+                console.log(1);
+            }
         }
     };
 

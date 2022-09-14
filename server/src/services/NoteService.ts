@@ -18,7 +18,7 @@ class NoteService {
             const creationDate = format(new Date(), "dd.MM.yyyy");
             const parsedDates = parseDates(content);
 
-            const newNote: INote = {
+            const newNote = {
                 id: Date.now(),
                 title:
                     prettifyTitle.at(0)?.toUpperCase() + prettifyTitle.slice(1),
@@ -52,15 +52,18 @@ class NoteService {
         const prettifyTitle = title.replace(/[^\w ]/g, "");
         const slug = prettifyTitle.replace(" ", "-").toLowerCase();
 
-        const isExists = data.find((i) => i.slug === slug);
-        console.log(isExists);
-        if (!isExists) {
-            const note = data.find((i) => i.id === Number(id));
-            const parsedDates = parseDates(content);
+        const note = data.find((i) => i.id === Number(id));
+        if (note) {
+            const index = data.indexOf(note);
+            const isExists = data
+                .filter((i) => i.id !== Number(id))
+                .find((i) => i.slug === slug);
 
-            if (note) {
+            if (!isExists) {
+                const parsedDates = parseDates(content);
+
                 const newNote: INote = {
-                    id: Date.now(),
+                    id: note.id,
                     title:
                         prettifyTitle.at(0)?.toUpperCase() +
                         prettifyTitle.slice(1),
@@ -70,12 +73,12 @@ class NoteService {
                     parsedDates,
                     slug,
                 };
-                const index = data.indexOf(note);
+
                 data.splice(index, 1, newNote);
                 return newNote;
+            } else {
+                throw new Error(title + " already exists");
             }
-        } else {
-            throw new Error(title + " already exists");
         }
     };
 

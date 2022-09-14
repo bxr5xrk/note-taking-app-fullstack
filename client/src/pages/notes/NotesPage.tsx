@@ -12,10 +12,10 @@ const NotesPage = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        // if (activeNotes.length === 0) {
-        dispatch(fetchNotes());
-        // deleteNote('one-title')
-        // }
+        if (!activeNotes.length) {
+            dispatch(fetchNotes());
+        }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

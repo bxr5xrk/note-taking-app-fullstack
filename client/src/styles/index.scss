@@ -6,20 +6,6 @@
     --text: black;
 }
 
-// .btn {
-//     padding: 10px 20px;
-//     border: 1px solid var(--primary);
-//     border-radius: 20px;
-//     color: var(--primary);
-//     background-color: var(--light-primary);
-//     transition: 0.3s;
-
-//     &:hover {
-//         background-color: var(--primary);
-//         color: white;
-//     }
-// }
-
 .btn {
     padding: 10px 20px;
     border: 1px solid var(--primary);
@@ -29,6 +15,7 @@
     transition: 0.3s;
     font-weight: 600;
     display: inline-block;
+    cursor: pointer;
 
     &:hover {
         transform: scale(1.05);

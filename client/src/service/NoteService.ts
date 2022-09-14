@@ -24,9 +24,10 @@ export const postNote = async ({
     content: string;
     category: string;
 }) => {
-    await $host.post("notes", { title, content, category }).catch((e) => {
-        console.log(e);
-    });
+    const note = await $host
+        .post<INote>("notes", { title, content, category })
+        .catch((e) => e);
+    return note;
 };
 
 export const deleteOneNote = async (slug: string) => {
@@ -48,5 +49,6 @@ export const patchNote = async (
         category: string;
     }
 ) => {
-    await $host.patch(`notes/${id}`, obj);
+    const note = await $host.patch(`notes/${id}`, obj).catch((e) => e);
+    return note;
 };
