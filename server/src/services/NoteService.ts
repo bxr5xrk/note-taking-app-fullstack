@@ -2,11 +2,10 @@ import { INote } from "../../types";
 import { data } from "../data";
 import { format } from "date-fns";
 import { parseDates } from "../helpers/parseDates";
+import { calculateCategoriesCount } from "../helpers/calculateCategoriesCount";
 
 class NoteService {
-    getAll = () => {
-        return data;
-    };
+    getAll = () => data;
 
     create = (note: Pick<INote, "title" | "content" | "category">) => {
         const { title, content, category } = note;
@@ -92,6 +91,8 @@ class NoteService {
             throw new Error("Wrong slug");
         }
     };
+
+    getStats = () => calculateCategoriesCount(data);
 }
 
 export default new NoteService();
