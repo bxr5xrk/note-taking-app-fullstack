@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import { INote } from "../../types";
 import { data } from "../data";
 
