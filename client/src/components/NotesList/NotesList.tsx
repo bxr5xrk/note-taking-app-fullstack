@@ -9,6 +9,10 @@ interface NotesListProps {
 }
 
 const NotesList: FC<NotesListProps> = ({ notes, type }) => {
+    if (!notes.length) {
+        return <h2>No notes</h2>;
+    }
+
     return (
         <section className={st.root}>
             {notes.map((i) => (

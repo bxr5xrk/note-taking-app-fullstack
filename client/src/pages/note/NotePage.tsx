@@ -31,10 +31,11 @@ const NotePage = () => {
                     setShowError(true);
                 }
             } else {
-                getOneNote(slugParams, setNote);
+                getOneNote(slugParams)
+                    .then((i) => setNote(i))
+                    .catch((e) => setShowError(true));
             }
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [slugParams]);
 
@@ -44,10 +45,8 @@ const NotePage = () => {
             setTitle(note.title);
             setCategory(note.category);
             setContent(note.content);
-            if (!note.title) {
-                setShowError(true);
-            }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [note]);
 
     if (showError) {
@@ -62,17 +61,19 @@ const NotePage = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (note) {
-            const { data } = await patchNote(note.id, {
-                title,
-                content,
-                category,
-            });
-            if (data) {
-                dispatch(setActive(data));
-                setIsEditable(false);
-            } else {
-                console.log(1);
+        if (content) {
+            if (note) {
+                const { data } = await patchNote(note.id, {
+                    title,
+                    content,
+                    category,
+                });
+                if (data) {
+                    dispatch(setActive(data));
+                    setIsEditable(false);
+                } else {
+                    titleRef.current && titleRef.current.focus();
+                }
             }
         }
     };
@@ -113,6 +114,8 @@ const NotePage = () => {
                             placeholder="title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
+                            maxLength={30}
+                            minLength={2}
                         />
                     </div>
 

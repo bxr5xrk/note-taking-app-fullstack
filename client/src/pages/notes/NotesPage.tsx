@@ -12,7 +12,7 @@ const NotesPage = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        if (!activeNotes.length) {
+        if (activeNotes.length < 2) {
             dispatch(fetchNotes());
         }
 

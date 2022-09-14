@@ -36,9 +36,10 @@ export const deleteOneNote = async (slug: string) => {
     });
 };
 
-export const getOneNote = async (slug: string, setData: (i: INote) => void) => {
-    const { data } = await $host.get<INote>(`notes/${slug}`);
-    setData(data);
+export const getOneNote = async (slug: string) => {
+    const { data } = await $host.get(`notes/${slug}`);
+
+    return data;
 };
 
 export const patchNote = async (
@@ -51,4 +52,9 @@ export const patchNote = async (
 ) => {
     const note = await $host.patch(`notes/${id}`, obj).catch((e) => e);
     return note;
+};
+
+export const getStats = async () => {
+    const { data } = await $host.get("notes/stats");
+    return data;
 };

@@ -7,3 +7,8 @@ export interface INote {
     creationDate: string;
     parsedDates: string[];
 }
+
+export interface IStats {
+    category: string;
+    count: { total: number; active: number; archive: number };
+}

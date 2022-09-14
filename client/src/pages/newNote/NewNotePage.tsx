@@ -19,7 +19,7 @@ const NewNotePage: FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!title || !content) {
+        if (!content) {
             setValidate(true);
 
             setTimeout(() => {
@@ -53,6 +53,8 @@ const NewNotePage: FC = () => {
                 placeholder="Enter title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                maxLength={30}
+                minLength={2}
             />
 
             <Select

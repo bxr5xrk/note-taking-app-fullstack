@@ -1,7 +1,7 @@
 import { INote } from "./../../types/index";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import { deleteOneNote, fetchNotes } from "../../service/NoteService";
+import { deleteOneNote, fetchNotes, postNote } from "../../service/NoteService";
 
 const getArchiveFromLS = () => {
     const data = localStorage.getItem("archive");
@@ -24,25 +24,6 @@ const notesSlice = createSlice({
     name: "notes",
     initialState,
     reducers: {
-        // setActive(state, action: PayloadAction<INote>) {
-        //     const { id, title, content, category } = action.payload;
-
-        //     const find = state.activeNotes.find((i) => i.id === id);
-
-        //     if (find) {
-        //         patchNote(action.payload.id, {
-        //             title,
-        //             content,
-        //             category,
-        //         });
-
-        //         const index = state.activeNotes.indexOf(find);
-        //         state.activeNotes.splice(index, 1, action.payload);
-        //     } else {
-        //         state.activeNotes = [...state.activeNotes, action.payload];
-        //         postNote({ title, content, category });
-        //     }
-        // },
         setActive(state, action: PayloadAction<INote>) {
             const { id } = action.payload;
             const find = state.activeNotes.find((i) => i.id === id);
@@ -53,34 +34,13 @@ const notesSlice = createSlice({
             } else {
                 state.activeNotes = [...state.activeNotes, action.payload];
             }
-
-            // const { title, content, category } = action.payload;
-            // const note = postNote({ title, content, category })
-            // const { id, title, content, category } = action.payload;
-            // if (await note) {
-            // }
-            // const find = state.activeNotes.find((i) => i.id === id);
-            // if (find) {
-            //     patchNote(action.payload.id, {
-            //         title,
-            //         content,
-            //         category,
-            //     });
-            //     const index = state.activeNotes.indexOf(find);
-            //     state.activeNotes.splice(index, 1, action.payload);
-            // } else {
-            //     state.activeNotes = [...state.activeNotes, action.payload];
-            //     postNote({ title, content, category });
-            // }
         },
-
         deleteNote(state, action: PayloadAction<string>) {
-            deleteOneNote(action.payload);
             const find = state.activeNotes.find(
                 (i) => i.slug === action.payload
             );
-
             if (find) {
+                deleteOneNote(action.payload);
                 const index = state.activeNotes.indexOf(find);
                 state.activeNotes.splice(index, 1);
             } else {
@@ -94,6 +54,7 @@ const notesSlice = createSlice({
                     }
                 }
             }
+            localStorage.setItem("archive", JSON.stringify(state.archiveNotes));
         },
         setArchive(state, action: PayloadAction<string>) {
             const find = state.activeNotes.find(
@@ -115,10 +76,12 @@ const notesSlice = createSlice({
                         const index = state.archiveNotes.indexOf(find);
                         state.archiveNotes.splice(index, 1);
                         state.activeNotes = [...state.activeNotes, find];
+                        const { title, category, content } = find;
+                        postNote({ title, category, content });
                     }
                 }
             }
-            localStorage.setItem("active", JSON.stringify(state.activeNotes));
+
             localStorage.setItem("archive", JSON.stringify(state.archiveNotes));
         },
     },

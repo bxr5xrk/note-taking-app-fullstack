@@ -42,6 +42,10 @@ class NoteController {
             res.status(500).json(e.message);
         }
     };
+
+    stats = (req: Request, res: Response) => {
+        res.json(NoteService.getStats());
+    };
 }
 
 export default new NoteController();
