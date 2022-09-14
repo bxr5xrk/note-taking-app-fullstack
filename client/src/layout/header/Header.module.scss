@@ -1,0 +1,28 @@
+.root {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    font-weight: 700;
+    padding: 15px 0;
+    border-bottom: 2px solid grey;
+
+    .items {
+        display: flex;
+        flex-direction: row;
+        gap: 40px;
+    }
+
+    .active {
+        color: var(--primary);
+        fill: var(--primary);
+    }
+
+    a {
+        transition: 0.3s;
+        &:hover {
+            color: var(--primary);
+            fill: var(--primary);
+        }
+    }
+}

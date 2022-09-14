@@ -1,0 +1,88 @@
+.root {
+    min-width: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--primary);
+    position: relative;
+    padding: 15px;
+    border-radius: 15px;
+    gap: 15px;
+
+    .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+
+        h2 {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        svg {
+            cursor: pointer;
+            width: 25px;
+            height: 25px;
+        }
+    }
+
+    .content {
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .stats {
+        display: flex;
+        justify-content: space-between;
+
+        p {
+            &:nth-child(1) {
+                color: var(--primary);
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .dates {
+        display: flex;
+        gap: 15px;
+        overflow-x: scroll;
+        padding-bottom: 5px;
+
+        span {
+            padding: 5px 10px;
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            color: var(--primary);
+            background-color: var(--light-primary);
+            transition: 0.3s;
+
+            &:hover {
+                background-color: var(--primary);
+                color: white;
+            }
+        }
+    }
+
+    .options {
+        position: absolute;
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        top: -30px;
+        right: 0;
+        background-color: var(--primary);
+        color: white;
+        border-radius: 20px;
+        border: 1px solid var(--primary);
+
+        svg {
+            cursor: pointer;
+            width: 23px;
+            height: 23px;
+            fill: white;
+        }
+    }
+}

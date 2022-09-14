@@ -1,0 +1,32 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+
+    .back {
+        text-decoration: underline;
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        opacity: 0.5;
+    }
+
+    textarea {
+        height: 400px;
+        width: 400px;
+        font-size: 20px;
+    }
+
+    .notValid::placeholder {
+        color: red;
+    }
+
+    input {
+        font-weight: 600;
+        font-size: 35px;
+    }
+}

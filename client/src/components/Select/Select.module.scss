@@ -1,0 +1,11 @@
+.root {
+    display: flex;
+    gap: 10px;
+    font-weight: 600;
+
+    select {
+        text-decoration: underline;
+        color: var(--primary);
+        cursor: pointer;
+    }
+}
