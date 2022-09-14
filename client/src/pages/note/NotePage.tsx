@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Select from "../../components/Select/Select";
 import { categories } from "../../config";
+import { getOneNote, patchNote } from "../../service/NoteService";
 import { selectNotes, setActive } from "../../store/slices/notesSlice";
 import { useAppDispatch } from "../../store/store";
 import { INote } from "../../types";
@@ -23,19 +24,31 @@ const NotePage = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        if (activeNotes) {
-            const findItem = activeNotes.find((i) => i.slug === slugParams);
-            if (findItem) {
-                setNote(findItem);
+        if (slugParams) {
+            if (activeNotes.length) {
+                const findItem = activeNotes.find((i) => i.slug === slugParams);
+                if (findItem) {
+                    setNote(findItem);
+                } else {
+                    setShowError(true);
+                }
             } else {
+                getOneNote(slugParams, setNote);
+            }
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [slugParams]);
+
+    useEffect(() => {
+        if (note) {
+            setShowError(false);
+            setTitle(note.title);
+            setContent(note.content);
+            if (!note.title) {
                 setShowError(true);
             }
         }
-        if (note) {
-            setTitle(note.title);
-            setContent(note.content);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [note]);
 
     if (showError) {
@@ -67,13 +80,14 @@ const NotePage = () => {
                 parsedDates,
                 slug,
             };
-            dispatch(setActive(newNote));
+            console.log(newNote)
+            note && dispatch(setActive(newNote));
             setIsEditable(false);
         }
     };
 
     const handleEditClick = () => {
-        setIsEditable(!isEditable);
+        setIsEditable(true);
         titleRef.current && titleRef.current.focus();
     };
 

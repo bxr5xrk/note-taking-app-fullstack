@@ -1,3 +1,4 @@
+import { INote } from "./../types/index";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -32,4 +33,20 @@ export const deleteOneNote = async (slug: string) => {
     await $host.delete(`notes/${slug}`).catch((e) => {
         console.log(e);
     });
+};
+
+export const getOneNote = async (slug: string, setData: (i: INote) => void) => {
+    const { data } = await $host.get<INote>(`notes/${slug}`);
+    setData(data);
+};
+
+export const patchNote = async (
+    id: number,
+    obj: {
+        title: string;
+        content: string;
+        category: string;
+    }
+) => {
+    await $host.patch(`notes/${id}`, obj);
 };

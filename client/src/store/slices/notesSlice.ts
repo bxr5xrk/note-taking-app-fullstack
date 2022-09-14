@@ -2,7 +2,11 @@
 import { INote } from "./../../types/index";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import { deleteOneNote, fetchNotes } from "../../service/NoteService";
+import {
+    deleteOneNote,
+    fetchNotes,
+    patchNote,
+} from "../../service/NoteService";
 
 // const getActiveFromLS = () => {
 //     const data = localStorage.getItem("active");
@@ -32,19 +36,42 @@ const notesSlice = createSlice({
     initialState,
     reducers: {
         setActive(state, action: PayloadAction<INote>) {
-            const find = state.activeNotes.find(
-                (i) => i.id === action.payload.id
-            );
+            const { id, title, content, category } = action.payload;
+
+            const find = state.activeNotes.find((i) => i.id === id);
 
             if (find) {
+                patchNote(action.payload.id, {
+                    title,
+                    content,
+                    category,
+                });
+                // const newNote = {
+                //     ...find,
+                //     title,
+                //     category,
+                //     content,
+                // };
                 const index = state.activeNotes.indexOf(find);
                 state.activeNotes.splice(index, 1, action.payload);
             } else {
                 state.activeNotes = [...state.activeNotes, action.payload];
             }
-
-            localStorage.setItem("active", JSON.stringify(state.activeNotes));
         },
+        // setActive(state, action: PayloadAction<INote>) {
+        //     const find = state.activeNotes.find(
+        //         (i) => i.id === action.payload.id
+        //     );
+
+        //     if (find) {
+        //         const index = state.activeNotes.indexOf(find);
+        //         state.activeNotes.splice(index, 1, action.payload);
+        //     } else {
+        //         state.activeNotes = [...state.activeNotes, action.payload];
+        //     }
+
+        //     localStorage.setItem("active", JSON.stringify(state.activeNotes));
+        // },
         deleteNote(state, action: PayloadAction<string>) {
             deleteOneNote(action.payload);
             const find = state.activeNotes.find(

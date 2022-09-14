@@ -17,7 +17,7 @@ class NoteController {
 
     getOne = (req: Request, res: Response) => {
         try {
-            const note = NoteService.getOne(Number(req.params.id));
+            const note = NoteService.getOne(req.params.id);
             res.json(note);
         } catch (e: any) {
             res.status(500).json(e.message);
