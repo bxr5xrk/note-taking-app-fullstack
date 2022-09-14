@@ -10,8 +10,8 @@ class NoteController {
         try {
             const note = NoteService.create(req.body);
             res.json(note);
-        } catch (e) {
-            res.status(500).json(e);
+        } catch (e: any) {
+            res.status(500).json(e.message);
         }
     };
 
@@ -36,6 +36,7 @@ class NoteController {
     delete = (req: Request, res: Response) => {
         try {
             const note = NoteService.delete(req.params.id);
+
             res.json(note);
         } catch (e: any) {
             res.status(500).json(e.message);

@@ -1,4 +1,9 @@
 export interface INote {
-    title: string;
     id: number;
+    title: string;
+    slug: string;
+    content: string;
+    category: string;
+    creationDate: string;
+    parsedDates: string[];
 }
