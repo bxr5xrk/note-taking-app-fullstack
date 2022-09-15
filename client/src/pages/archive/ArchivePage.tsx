@@ -9,7 +9,6 @@ const ArchivePage = () => {
     return (
         <section>
             {archiveNotes && <NotesList notes={archiveNotes} type="archive" />}
-            {!archiveNotes?.length && <h2>No archived notes</h2>}
         </section>
     );
 };

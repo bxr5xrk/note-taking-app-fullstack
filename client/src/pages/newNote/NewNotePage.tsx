@@ -5,6 +5,7 @@ import { categories } from "../../config";
 import { postNote } from "../../service/NoteService";
 import { setActive } from "../../store/slices/notesSlice";
 import { useAppDispatch } from "../../store/store";
+import { wrongTitle } from "../../utils";
 import st from "./NewNotePage.module.scss";
 
 const NewNotePage: FC = () => {
@@ -31,14 +32,7 @@ const NewNotePage: FC = () => {
                 dispatch(setActive(data));
                 navigate("/notes");
             } else {
-                if (titleRef.current) {
-                    const oldTitle = title;
-                    setTitle("already exists");
-
-                    setTimeout(() => {
-                        setTitle(oldTitle);
-                    }, 1000);
-                }
+                wrongTitle(titleRef);
             }
         }
     };

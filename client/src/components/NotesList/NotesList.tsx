@@ -14,20 +14,23 @@ const NotesList: FC<NotesListProps> = ({ notes, type }) => {
     }
 
     return (
-        <section className={st.root}>
-            {notes.map((i) => (
-                <NoteItem
-                    type={type}
-                    key={i.slug}
-                    title={i.title}
-                    slug={i.slug}
-                    content={i.content}
-                    creationDate={i.creationDate}
-                    category={i.category}
-                    parsedDates={i.parsedDates}
-                />
-            ))}
-        </section>
+        <div className={st.root}>
+            <h1>Notes</h1>
+            <section className={st.list}>
+                {notes.map((i) => (
+                    <NoteItem
+                        type={type}
+                        key={i.slug}
+                        title={i.title}
+                        slug={i.slug}
+                        content={i.content}
+                        creationDate={i.creationDate}
+                        category={i.category}
+                        parsedDates={i.parsedDates}
+                    />
+                ))}
+            </section>
+        </div>
     );
 };
 

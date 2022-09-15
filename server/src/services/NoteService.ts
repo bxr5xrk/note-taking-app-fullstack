@@ -3,30 +3,15 @@ import { data } from "../data";
 import { format } from "date-fns";
 import { parseDates } from "../helpers/parseDates";
 import { calculateCategoriesCount } from "../helpers/calculateCategoriesCount";
+import { createNoteObj } from "../helpers/createNoteObj";
 
 class NoteService {
     getAll = () => data;
 
     create = (note: Pick<INote, "title" | "content" | "category">) => {
         const { title, content, category } = note;
-        const prettifyTitle = title.replace(/[^\w ]/g, "");
-        const slug = prettifyTitle.replace(" ", "-").toLowerCase();
-
-        const isExists = data.find((i) => i.slug === slug);
-        if (!isExists) {
-            const creationDate = format(new Date(), "dd.MM.yyyy");
-            const parsedDates = parseDates(content);
-
-            const newNote = {
-                id: Date.now(),
-                title:
-                    prettifyTitle.at(0)?.toUpperCase() + prettifyTitle.slice(1),
-                content,
-                creationDate,
-                category,
-                parsedDates,
-                slug,
-            };
+        const newNote = createNoteObj(data, title, content, category);
+        if (newNote) {
             data.push(newNote);
             return newNote;
         } else {

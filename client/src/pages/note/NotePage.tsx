@@ -7,6 +7,7 @@ import { getOneNote, patchNote } from "../../service/NoteService";
 import { selectNotes, setActive } from "../../store/slices/notesSlice";
 import { useAppDispatch } from "../../store/store";
 import { INote } from "../../types";
+import { wrongTitle } from "../../utils";
 import st from "./NotePage.module.scss";
 
 const NotePage = () => {
@@ -72,7 +73,7 @@ const NotePage = () => {
                     dispatch(setActive(data));
                     setIsEditable(false);
                 } else {
-                    titleRef.current && titleRef.current.focus();
+                    wrongTitle(titleRef);
                 }
             }
         }
