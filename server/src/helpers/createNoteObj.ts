@@ -7,12 +7,14 @@ export const createNoteObj = (
     noteTitle: string,
     content: string,
     category: string,
-    noteCreationDate?: string,
-    noteId?: number
+    id: number,
+    noteCreationDate?: string
 ) => {
     const prettifyTitle = noteTitle.replace(/[^\w ]/g, "");
     const slug = prettifyTitle.replace(" ", "-").toLowerCase();
-    const isExists = activeNotes.find((i) => i.slug === slug);
+    const isExists = activeNotes
+        .filter((i) => i.id !== id)
+        .find((i) => i.slug === slug);
     const title = prettifyTitle.at(0)?.toUpperCase() + prettifyTitle.slice(1);
 
     if (isExists) {
@@ -22,7 +24,6 @@ export const createNoteObj = (
             ? noteCreationDate
             : format(new Date(), "dd.MM.yyyy");
         const parsedDates = parseDates(content);
-        const id = noteId ? noteId : Date.now();
 
         return {
             id,

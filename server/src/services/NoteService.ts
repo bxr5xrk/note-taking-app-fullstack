@@ -10,7 +10,13 @@ class NoteService {
 
     create = (note: Pick<INote, "title" | "content" | "category">) => {
         const { title, content, category } = note;
-        const newNote = createNoteObj(data, title, content, category);
+        const newNote = createNoteObj(
+            data,
+            title,
+            content,
+            category,
+            Date.now()
+        );
         if (newNote) {
             data.push(newNote);
             return newNote;
@@ -33,36 +39,26 @@ class NoteService {
 
     update = (id: string, body: INote) => {
         const { title, content, category } = body;
-        const prettifyTitle = title.replace(/[^\w ]/g, "");
-        const slug = prettifyTitle.replace(" ", "-").toLowerCase();
 
         const note = data.find((i) => i.id === Number(id));
         if (note) {
-            const index = data.indexOf(note);
-            const isExists = data
-                .filter((i) => i.id !== Number(id))
-                .find((i) => i.slug === slug);
-
-            if (!isExists) {
-                const parsedDates = parseDates(content);
-
-                const newNote: INote = {
-                    id: note.id,
-                    title:
-                        prettifyTitle.at(0)?.toUpperCase() +
-                        prettifyTitle.slice(1),
-                    content,
-                    creationDate: note.creationDate,
-                    category,
-                    parsedDates,
-                    slug,
-                };
-
-                data.splice(index, 1, newNote);
+            const newNote = createNoteObj(
+                data,
+                title,
+                content,
+                category,
+                note.id,
+                note.creationDate
+            );
+            if (newNote) {
+                if (note) {
+                    const index = data.indexOf(note);
+                    data.splice(index, 1, newNote);
+                }
                 return newNote;
-            } else {
-                throw new Error(title + " already exists");
             }
+        } else {
+            throw new Error("not found");
         }
     };
 
