@@ -1,79 +1,11 @@
 import { INote } from "../types";
-import { data } from "../data";
-import { format } from "date-fns";
-import { parseDates } from "../helpers/parseDates";
-import { calculateCategoriesCount } from "../helpers/calculateCategoriesCount";
-import { createNoteObj } from "../helpers/createNoteObj";
 import db from "../db";
 
+// ! add parsing dates
+// ! simplify code
+// ! rewrite postgres logic to obsidian
+
 class NoteService {
-    // getAll = () => data;
-
-    // create = (note: Pick<INote, "title" | "content" | "category">) => {
-    //     const { title, content, category } = note;
-    //     const newNote = createNoteObj(
-    //         data,
-    //         title,
-    //         content,
-    //         category,
-    //         Date.now()
-    //     );
-    //     if (newNote) {
-    //         data.push(newNote);
-    //         return newNote;
-    //     } else {
-    //         throw new Error(title + " already exists");
-    //     }
-    // };
-
-    // getOne = (slug: string) => {
-    //     if (!slug) {
-    //         throw new Error("note not found");
-    //     }
-    //     const find = data.find((i) => i.slug === slug);
-    //     if (!find) {
-    //         throw new Error("Wrong note slug");
-    //     } else {
-    //         return find;
-    //     }
-    // };
-
-    // update = (id: string, body: INote) => {
-    //     const { title, content, category } = body;
-
-    //     const note = data.find((i) => i.id === Number(id));
-    //     if (note) {
-    //         const newNote = createNoteObj(
-    //             data,
-    //             title,
-    //             content,
-    //             category,
-    //             note.id,
-    //             note.creationDate
-    //         );
-    //         if (newNote) {
-    //             if (note) {
-    //                 const index = data.indexOf(note);
-    //                 data.splice(index, 1, newNote);
-    //             }
-    //             return newNote;
-    //         }
-    //     } else {
-    //         throw new Error("not found");
-    //     }
-    // };
-
-    // delete = (slug: string) => {
-    //     const find = data.find((i) => i.slug === slug);
-    //     if (find) {
-    //         const index = data.indexOf(find);
-    //         data.splice(index, 1);
-    //         return find;
-    //     } else {
-    //         throw new Error("Wrong slug");
-    //     }
-    // };
-
     // getStats = () => calculateCategoriesCount(data);
     getActive = async () =>
         (await db.query("select * from active ORDER BY id asc")).rows;
@@ -105,14 +37,26 @@ class NoteService {
         INote,
         "title" | "slug" | "category" | "content" | "parseddates"
     >) => {
-        const note = (
+        const allSlugs = (
             await db.query(
-                `insert into active (title, slug, content, category, parseddates) values ($1, $2, $3, $4, $5) returning *`,
-                [title, slug, content, category, parseddates]
+                "select active.slug from active union select archive.slug from archive"
             )
-        ).rows[0];
-        if (note) {
-            return note;
+        ).rows;
+        if (allSlugs.length) {
+            const findTitle = allSlugs.find((i) => i.slug === slug);
+            if (!findTitle) {
+                const note = (
+                    await db.query(
+                        `insert into active (title, slug, content, category, parseddates) values ($1, $2, $3, $4, $5) returning *`,
+                        [title, slug, content, category, parseddates]
+                    )
+                ).rows[0];
+                if (note) {
+                    return note;
+                } else {
+                    throw new Error(title + " already exists");
+                }
+            }
         } else {
             throw new Error(title + " already exists");
         }
