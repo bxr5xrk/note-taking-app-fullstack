@@ -1,4 +1,4 @@
-import { INote } from "../../types";
+import { INote } from "../types";
 import { categories } from "../config";
 
 export const calculateCategoriesCount = (

@@ -1,4 +1,4 @@
-import { INote } from "../../types";
+import { INote } from "../types";
 import { data } from "../data";
 import { format } from "date-fns";
 import { parseDates } from "../helpers/parseDates";

@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { INote } from "../../types";
+import { INote } from "../types";
 import { parseDates } from "./parseDates";
 
 export const createNoteObj = (

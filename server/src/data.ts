@@ -1,4 +1,4 @@
-import { INote } from "../types";
+import { INote } from "./types";
 
 export const data: INote[] = [
     {
