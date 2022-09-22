@@ -8,5 +8,4 @@ const db = new Pool({
     database: "notes",
 });
 
-// module.exports = pool;
 export default db;
