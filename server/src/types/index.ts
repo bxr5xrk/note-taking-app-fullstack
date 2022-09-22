@@ -4,6 +4,6 @@ export interface INote {
     slug: string;
     content: string;
     category: string;
-    creationDate: string;
-    parsedDates: string[];
+    parseddates: string[];
+    created_at: string;
 }
