@@ -1,11 +1,17 @@
 import { INote } from "../types";
 import db from "../db";
 import { createTitleAndSlug, parseDates } from "../helpers/toolsForNoteObj";
+import { calculateCategoriesCount } from "../helpers/calculateCategoriesCount";
 
 // ! rewrite postgres logic to obsidian
 
 class NoteService {
-    // getStats = () => calculateCategoriesCount(data);
+    stats = async () =>
+        calculateCategoriesCount(
+            (await db.query<INote>("select * from active")).rows,
+            (await db.query<INote>("select * from archive")).rows
+        );
+
     findTitle = async (slug: string, type: "create" | "update") => {
         const allSlugs = (
             await db.query(
@@ -45,6 +51,7 @@ class NoteService {
             }
         }
     };
+
     create = async ({
         title,
         content,

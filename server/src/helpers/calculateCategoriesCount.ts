@@ -1,8 +1,9 @@
-import { INote } from "../types";
 import { categories } from "../config";
+import { INote } from "../types";
 
 export const calculateCategoriesCount = (
     active: INote[],
+    archive: INote[]
 ) => {
     const itemsCount = [
         { category: categories[0], count: { total: 0, active: 0, archive: 0 } },
@@ -20,11 +21,19 @@ export const calculateCategoriesCount = (
             })
     );
 
-    active.forEach((i) => {
+    active.length && active.forEach((i) => {
         const item = findItem(i.category);
         if (item) {
             item.count.total++;
             item.count.active++;
+        }
+    });
+
+    archive.length && archive.forEach((i) => {
+        const item = findItem(i.category);
+        if (item) {
+            item.count.total++;
+            item.count.archive++;
         }
     });
 

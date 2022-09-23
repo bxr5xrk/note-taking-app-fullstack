@@ -69,6 +69,10 @@ class NoteController {
             res.status(500).json(e.message);
         }
     };
+
+    getStats = async (req: Request, res: Response) => {
+        res.json(await NoteService.stats());
+    };
 }
 
 export default new NoteController();
