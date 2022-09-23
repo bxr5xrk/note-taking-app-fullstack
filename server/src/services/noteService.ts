@@ -1,12 +1,30 @@
 import { INote } from "../types";
 import db from "../db";
+import { createTitleAndSlug, parseDates } from "../helpers/toolsForNoteObj";
 
-// ! add parsing dates
-// ! simplify code
 // ! rewrite postgres logic to obsidian
 
 class NoteService {
     // getStats = () => calculateCategoriesCount(data);
+    findTitle = async (slug: string, type: "create" | "update") => {
+        const allSlugs = (
+            await db.query(
+                "select active.slug from active union select archive.slug from archive"
+            )
+        ).rows;
+        if (allSlugs.length) {
+            const findTitle =
+                type === "create"
+                    ? allSlugs.find((i) => i.slug === slug)
+                    : allSlugs
+                          .filter((i) => i.slug !== slug)
+                          .find((i) => i.slug === slug);
+            if (findTitle) {
+                return "already exists";
+            }
+        }
+    };
+
     getActive = async () =>
         (await db.query("select * from active ORDER BY id asc")).rows;
 
@@ -29,34 +47,19 @@ class NoteService {
     };
     create = async ({
         title,
-        slug,
         content,
         category,
-        parseddates,
-    }: Pick<
-        INote,
-        "title" | "slug" | "category" | "content" | "parseddates"
-    >) => {
-        const allSlugs = (
-            await db.query(
-                "select active.slug from active union select archive.slug from archive"
-            )
-        ).rows;
-        if (allSlugs.length) {
-            const findTitle = allSlugs.find((i) => i.slug === slug);
-            if (!findTitle) {
-                const note = (
-                    await db.query(
-                        `insert into active (title, slug, content, category, parseddates) values ($1, $2, $3, $4, $5) returning *`,
-                        [title, slug, content, category, parseddates]
-                    )
-                ).rows[0];
-                if (note) {
-                    return note;
-                } else {
-                    throw new Error(title + " already exists");
-                }
-            }
+    }: Pick<INote, "title" | "category" | "content">) => {
+        const { slug, newTitle } = createTitleAndSlug(title);
+        const find = await this.findTitle(slug, "create");
+        if (!find) {
+            const note = (
+                await db.query(
+                    `insert into active (title, slug, content, category, parseddates) values ($1, $2, $3, $4, $5) returning *`,
+                    [newTitle, slug, content, category, parseDates(content)]
+                )
+            ).rows[0];
+            return note;
         } else {
             throw new Error(title + " already exists");
         }
@@ -77,41 +80,27 @@ class NoteService {
         }
         return `successfully deleted note with id: ${id}`;
     };
+
     update = async ({
         id,
         title,
-        slug,
         content,
         category,
-        parseddates,
-    }: Pick<
-        INote,
-        "id" | "title" | "category" | "slug" | "parseddates" | "content"
-    >) => {
+    }: Pick<INote, "id" | "title" | "category" | "content">) => {
         if (!id) {
             throw new Error("No id");
         }
-        const allSlugs = (
-            await db.query(
-                "select active.slug from active union select archive.slug from archive"
-            )
-        ).rows;
-        if (allSlugs.length) {
-            const findTitle = allSlugs
-                .filter((i) => i.slug !== slug)
-                .find((i) => i.slug === slug);
-            if (!findTitle) {
-                return await (
-                    await db.query(
-                        "update active set title = $1, slug = $2, content = $3, category = $4, parsedDates = $5 where id = $6 returning *",
-                        [title, slug, content, category, parseddates, id]
-                    )
-                ).rows[0];
-            } else {
-                throw new Error(title + " already exists");
-            }
+        const { slug, newTitle } = createTitleAndSlug(title);
+        const find = await this.findTitle(slug, "update");
+        if (!find) {
+            return await (
+                await db.query(
+                    "update active set title = $1, slug = $2, content = $3, category = $4, parsedDates = $5 where id = $6 returning *",
+                    [newTitle, slug, content, category, parseDates(content), id]
+                )
+            ).rows[0];
         } else {
-            throw new Error("exists");
+            throw new Error(title + " already exists");
         }
     };
 
@@ -127,13 +116,14 @@ class NoteService {
                 "with item as (delete from active where id = $1 returning *) insert into archive select * from item",
                 [id]
             );
+            return "archived";
         } else {
             await db.query(
                 "with item as (delete from archive where id = $1 returning *) insert into active select * from item",
                 [id]
             );
+            return "unArchived";
         }
-        return findInActive ? "archived" : "unArchived";
     };
 }
 
