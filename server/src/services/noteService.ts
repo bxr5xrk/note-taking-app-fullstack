@@ -3,8 +3,6 @@ import db from "../db";
 import { createTitleAndSlug, parseDates } from "../helpers/toolsForNoteObj";
 import { calculateCategoriesCount } from "../helpers/calculateCategoriesCount";
 
-// ! rewrite postgres logic to obsidian
-
 class NoteService {
     stats = async () =>
         calculateCategoriesCount(
