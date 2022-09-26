@@ -20,6 +20,7 @@ class ActiveNote extends Model<ActiveNote, NoteCreationAttr> {
         type: DataType.STRING,
         unique: true,
         allowNull: false,
+        defaultValue: String(Date.now()),
     })
     title: string;
 
@@ -27,18 +28,21 @@ class ActiveNote extends Model<ActiveNote, NoteCreationAttr> {
         type: DataType.STRING,
         unique: true,
         allowNull: false,
+        defaultValue: String(Date.now()),
     })
     slug: string;
 
     @Column({
         type: DataType.TEXT,
         allowNull: false,
+        defaultValue: String(Date.now()),
     })
     content: string;
 
     @Column({
         type: DataType.STRING,
         allowNull: false,
+        defaultValue: String(Date.now()),
     })
     category: string;
 
