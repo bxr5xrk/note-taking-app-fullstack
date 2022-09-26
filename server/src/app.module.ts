@@ -1,7 +1,8 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { SequelizeModule } from "@nestjs/sequelize";
-import Note from "./notes/notes.model";
+import ActiveNote from "./notes/activeNotes.model";
+import ArchiveNote from "./notes/archiveNotes.model";
 import { NotesModule } from "./notes/notes.module";
 
 @Module({
@@ -18,7 +19,7 @@ import { NotesModule } from "./notes/notes.module";
             username: process.env.POSTGRES_NAME,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [Note],
+            models: [ActiveNote, ArchiveNote],
             autoLoadModels: true, // for sequelize creates models in database based on our models
         }),
         NotesModule,

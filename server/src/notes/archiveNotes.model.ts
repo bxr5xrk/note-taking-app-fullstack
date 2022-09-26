@@ -6,8 +6,8 @@ interface NoteCreationAttr {
     category: string;
 }
 
-@Table({ tableName: "active" })
-class Note extends Model<Note, NoteCreationAttr> {
+@Table({ tableName: "archive" })
+class ArchiveNote extends Model<ArchiveNote, NoteCreationAttr> {
     @Column({
         type: DataType.INTEGER,
         unique: true,
@@ -42,33 +42,10 @@ class Note extends Model<Note, NoteCreationAttr> {
     })
     category: string;
 
-    // @Column({
-    //     type: DataType.TIME,
-    //     allowNull: false,
-    // })
-    // created_at: string;
-
     @Column({
         type: DataType.ARRAY(DataType.STRING),
     })
     parseddates: string[];
 }
 
-export default Note;
-
-// Note.init({
-//     title: {
-//         type: DataType.STRING,
-//         unique: true,
-//     },
-// });
-
-// CREATE TABLE active (
-//     id SERIAL NOT NULL PRIMARY KEY,
-//     title varchar(50) unique,
-//     slug varchar(50) unique,
-//     content text,
-//     parseddates text[],
-//     category varchar(50),
-//     created_at TIMESTAMP NOT NULL DEFAULT NOW()
-//   );
+export default ArchiveNote;

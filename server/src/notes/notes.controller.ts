@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { CreateNoteDTO } from "./dto/create-note.dto";
 import NotesService from "./notes.service";
 
@@ -12,7 +12,22 @@ export class NotesController {
     }
 
     @Get()
-    getAll() {
+    getAllActive() {
         return this.notesService.getAllActive();
+    }
+
+    @Get("/archive")
+    getAllArchive() {
+        return this.notesService.getAllArchive();
+    }
+
+    @Get(":slug")
+    getOne(@Param("slug") slug: string) {
+        return this.notesService.getNoteBySlug(slug);
+    }
+
+    @Delete(":id")
+    delete(@Param("id") id: string) {
+        return this.notesService.deleteById(+id);
     }
 }
