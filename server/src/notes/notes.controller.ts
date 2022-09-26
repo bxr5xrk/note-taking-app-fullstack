@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch,
+    Post,
+} from "@nestjs/common";
 import { CreateNoteDTO } from "./dto/create-note.dto";
 import NotesService from "./notes.service";
 
@@ -29,5 +37,15 @@ export class NotesController {
     @Delete(":id")
     delete(@Param("id") id: string) {
         return this.notesService.deleteById(+id);
+    }
+
+    @Patch(":id")
+    update(@Param("id") id: string, @Body() updateUserDto: CreateNoteDTO) {
+        return this.notesService.updateNote(+id, updateUserDto);
+    }
+
+    @Patch("/archive/:id")
+    archiveOrUnarchive(@Param("id") id: string) {
+        return this.notesService.archiveUnArchive(+id);
     }
 }

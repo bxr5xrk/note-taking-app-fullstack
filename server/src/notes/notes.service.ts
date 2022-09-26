@@ -62,6 +62,26 @@ class NotesService {
         return note;
     }
 
+    async archiveUnArchive(id: number) {
+        if (!id) {
+            throw new Error("No id");
+        }
+        const findInActive = await this.activeNoteRep.findOne({
+            where: { id: id },
+        });
+
+        if (findInActive) {
+            return this.moveNote(findInActive, "archive");
+        } else {
+            const findInArchive = await this.archiveNoteRep.findOne({
+                where: { id: id },
+            });
+            if (findInArchive) {
+                return this.moveNote(findInArchive, "unarchive");
+            }
+        }
+    }
+
     async moveNote(note: ActiveNote, type: "archive" | "unarchive") {
         const {
             id,
@@ -102,82 +122,6 @@ class NotesService {
             type === "archive" ? this.activeNoteRep : this.archiveNoteRep;
 
         return await destroyMe.destroy({ where: { id: id } });
-    }
-
-    async archiveUnArchive(id: number) {
-        if (!id) {
-            throw new Error("No id");
-        }
-        const findInActive = await this.activeNoteRep.findOne({
-            where: { id: id },
-        });
-
-        if (findInActive) {
-            // const {
-            //     id,
-            //     title,
-            //     content,
-            //     category,
-            //     parseddates,
-            //     slug,
-            //     createdAt,
-            //     updatedAt,
-            // } = findInActive;
-
-            // const newNote = await this.archiveNoteRep.create();
-            // await this.archiveNoteRep.update(
-            //     {
-            //         id,
-            //         title,
-            //         content,
-            //         category,
-            //         parseddates,
-            //         slug,
-            //         createdAt,
-            //         updatedAt,
-            //     },
-            //     {
-            //         where: { id: newNote.id },
-            //     }
-            // );
-            // return await this.activeNoteRep.destroy({ where: { id: id } });
-            return this.moveNote(findInActive, "archive");
-        } else {
-            const findInArchive = await this.archiveNoteRep.findOne({
-                where: { id: id },
-            });
-            if (findInArchive) {
-                // const {
-                //     id,
-                //     title,
-                //     content,
-                //     category,
-                //     parseddates,
-                //     slug,
-                //     createdAt,
-                //     updatedAt,
-                // } = findInArchive;
-
-                // const newNote = await this.activeNoteRep.create();
-                // await this.activeNoteRep.update(
-                //     {
-                //         id,
-                //         slug,
-                //         title,
-                //         content,
-                //         category,
-                //         createdAt,
-                //         updatedAt,
-                //         parseddates,
-                //     },
-                //     {
-                //         where: { id: newNote.id },
-                //     }
-                // );
-                // return await this.archiveNoteRep.destroy({ where: { id: id } });
-                return this.moveNote(findInArchive, "unarchive");
-            }
-        }
     }
 }
 

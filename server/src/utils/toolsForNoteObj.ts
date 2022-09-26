@@ -1,11 +1,4 @@
 import { CreateNoteDTO } from "./../notes/dto/create-note.dto";
-// export const createTitleAndSlug = (title: string) => {
-//     const prettifyTitle = title.replace(/[^\w ]/g, "");
-//     const slug = prettifyTitle.toLowerCase().split(" ").join("-");
-//     const newTitle =
-//         prettifyTitle.at(0)?.toUpperCase() + prettifyTitle.slice(1);
-//     return { slug, newTitle };
-// };
 
 export const createNoteObj = (dto: CreateNoteDTO) => {
     const { title, content, category } = dto;
@@ -21,7 +14,6 @@ export const createNoteObj = (dto: CreateNoteDTO) => {
         category,
         parseddates: parseDates(content),
     };
-    // return { slug, newTitle };
 };
 
 export const parseDates = (string: string) => {
