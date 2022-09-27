@@ -1,4 +1,12 @@
 /server/node_modules
+/server/dist
 /client/node_modules
 
-/server/.env
+.env
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.jsonz

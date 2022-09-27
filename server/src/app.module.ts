@@ -20,7 +20,7 @@ import { NotesModule } from "./notes/notes.module";
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
             models: [ActiveNote, ArchiveNote],
-            autoLoadModels: true, // for sequelize creates models in database based on our models
+            autoLoadModels: true,
         }),
         NotesModule,
     ],
