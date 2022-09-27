@@ -8,3 +8,5 @@ export interface INote {
     createdAt: string;
     updatedAt: string;
 }
+
+export const categories = ["Idea", "Task", "Random Thought"];
