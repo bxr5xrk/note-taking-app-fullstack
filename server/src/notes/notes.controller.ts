@@ -29,6 +29,11 @@ export class NotesController {
         return this.notesService.getAllArchive();
     }
 
+    @Get("/stats")
+    getStats() {
+        return this.notesService.stats();
+    }
+
     @Get(":slug")
     getOne(@Param("slug") slug: string) {
         return this.notesService.getNoteBySlug(slug);
@@ -40,8 +45,8 @@ export class NotesController {
     }
 
     @Patch(":id")
-    update(@Param("id") id: string, @Body() updateUserDto: CreateNoteDTO) {
-        return this.notesService.updateNote(+id, updateUserDto);
+    update(@Param("id") id: string, @Body() updateNoteDto: CreateNoteDTO) {
+        return this.notesService.updateNote(+id, updateNoteDto);
     }
 
     @Patch("/archive/:id")

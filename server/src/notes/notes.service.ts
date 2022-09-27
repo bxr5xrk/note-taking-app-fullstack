@@ -1,9 +1,11 @@
+import { calculateCategoriesCount } from "./../utils/calculateCategoriesCount";
 import { CreateNoteDTO } from "./dto/create-note.dto";
-import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { createNoteObj } from "src/utils/toolsForNoteObj";
 import ActiveNote from "./activeNotes.model";
 import ArchiveNote from "./archiveNotes.model";
+import { Injectable } from "@nestjs/common";
+import { ValidationException } from "src/pipes/validation.exception";
 
 export interface INote {
     id: number;
@@ -23,13 +25,28 @@ class NotesService {
         @InjectModel(ArchiveNote) private archiveNoteRep: typeof ArchiveNote
     ) {}
 
+    async stats() {
+        return calculateCategoriesCount(
+            await this.activeNoteRep.findAll(),
+            await this.archiveNoteRep.findAll()
+        );
+    }
+
     async createNote(dto: CreateNoteDTO) {
-        const note = await this.activeNoteRep.create(createNoteObj(dto));
-        return note;
+        const { title } = dto;
+
+        const validate = await this.slugExists(title, "create");
+        if (validate) {
+            throw new ValidationException(title + " already exists");
+        } else {
+            return await this.activeNoteRep.create(createNoteObj(dto));
+        }
     }
 
     async getAllActive() {
-        return await this.activeNoteRep.findAll({ order: [["id", "ASC"]] });
+        return await this.activeNoteRep.findAll({
+            order: [["id", "ASC"]],
+        });
     }
 
     async getAllArchive() {
@@ -53,19 +70,21 @@ class NotesService {
     }
 
     async updateNote(id: number, dto: CreateNoteDTO) {
-        const note = await this.activeNoteRep.update(
-            { ...createNoteObj(dto) },
-            {
-                where: { id: id },
-            }
-        );
-        return note;
+        const { title } = dto;
+        const validate = await this.slugExists(title, "update");
+        if (validate) {
+            throw new ValidationException(title + " already exists");
+        } else {
+            return await this.activeNoteRep.update(
+                { ...createNoteObj(dto) },
+                {
+                    where: { id: id },
+                }
+            );
+        }
     }
 
     async archiveUnArchive(id: number) {
-        if (!id) {
-            throw new Error("No id");
-        }
         const findInActive = await this.activeNoteRep.findOne({
             where: { id: id },
         });
@@ -78,6 +97,31 @@ class NotesService {
             });
             if (findInArchive) {
                 return this.moveNote(findInArchive, "unarchive");
+            }
+        }
+    }
+
+    async slugExists(title: string, type: "create" | "update") {
+        const prettifyTitle = title.replace(/[^\w ]/g, "");
+        const slug = prettifyTitle.toLowerCase().split(" ").join("-");
+
+        const allSlugs = await Promise.all([
+            this.activeNoteRep.findAll({ attributes: ["slug"] }),
+            this.archiveNoteRep.findAll({ attributes: ["slug"] }),
+        ]);
+        const slugs = [...allSlugs[0], ...allSlugs[1]];
+
+        if (slugs.length) {
+            const findSlug =
+                type === "create"
+                    ? slugs.find((i) => i.slug === slug)
+                    : slugs
+                          .filter((i) => i.slug !== slug)
+                          .find((i) => i.slug === slug);
+            if (findSlug) {
+                return "already exists";
+            } else {
+                return null;
             }
         }
     }
