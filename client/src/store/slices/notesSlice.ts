@@ -1,23 +1,31 @@
+import { fetchArchiveNotes } from "./../../service/NoteService";
 import { INote } from "./../../types/index";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import { deleteOneNote, fetchNotes, postNote } from "../../service/NoteService";
+import {
+    deleteOneNote,
+    fetchActiveNotes,
+    postNote,
+} from "../../service/NoteService";
 
-const getArchiveFromLS = () => {
-    const data = localStorage.getItem("archive");
-    return data ? JSON.parse(data) : null;
-};
+// const getArchiveFromLS = () => {
+//     const data = localStorage.getItem("archive");
+//     return data ? JSON.parse(data) : null;
+// };
 
 interface notesProps {
     activeNotes: INote[];
-    archiveNotes: INote[] | null;
-    status: "loading" | "success" | "rejected";
+    archiveNotes: INote[];
+    statusActive: "loading" | "success" | "rejected";
+    statusArchive: "loading" | "success" | "rejected";
 }
 
 const initialState: notesProps = {
     activeNotes: [],
-    archiveNotes: getArchiveFromLS(),
-    status: "loading",
+    // archiveNotes: getArchiveFromLS(),
+    archiveNotes: [],
+    statusActive: "loading",
+    statusArchive: "loading",
 };
 
 const notesSlice = createSlice({
@@ -25,28 +33,27 @@ const notesSlice = createSlice({
     initialState,
     reducers: {
         setActive(state, action: PayloadAction<INote>) {
-            const { id } = action.payload;
-            const find = state.activeNotes.find((i) => i.id === id);
+            // const { id } = action.payload;
+            // const find = state.activeNotes.find((i) => i.id === id);
 
-            if (find) {
-                const index = state.activeNotes.indexOf(find);
-                state.activeNotes.splice(index, 1, action.payload);
-            } else {
-                state.activeNotes = [...state.activeNotes, action.payload];
-            }
+            // if (find) {
+            //     const index = state.activeNotes.indexOf(find);
+            //     state.activeNotes.splice(index, 1, action.payload);
+            // } else {
+            //     state.activeNotes = [...state.activeNotes, action.payload];
+            // }
+            state.activeNotes = [...state.activeNotes, action.payload];
         },
-        deleteNote(state, action: PayloadAction<string>) {
-            const find = state.activeNotes.find(
-                (i) => i.slug === action.payload
-            );
+        deleteNote(state, action: PayloadAction<number>) {
+            const find = state.activeNotes.find((i) => i.id === action.payload);
+            deleteOneNote(action.payload);
             if (find) {
-                deleteOneNote(action.payload);
                 const index = state.activeNotes.indexOf(find);
                 state.activeNotes.splice(index, 1);
             } else {
                 if (state.archiveNotes) {
                     const find = state.archiveNotes.find(
-                        (i) => i.slug === action.payload
+                        (i) => i.id === action.payload
                     );
                     if (find) {
                         const index = state.archiveNotes.indexOf(find);
@@ -54,14 +61,13 @@ const notesSlice = createSlice({
                     }
                 }
             }
-            localStorage.setItem("archive", JSON.stringify(state.archiveNotes));
         },
         setArchive(state, action: PayloadAction<string>) {
             const find = state.activeNotes.find(
                 (i) => i.slug === action.payload
             );
             if (find) {
-                notesSlice.caseReducers.deleteNote(state, action);
+                // notesSlice.caseReducers.deleteNote(state, action);
                 if (state.archiveNotes) {
                     state.archiveNotes = [...state.archiveNotes, find];
                 } else {
@@ -86,20 +92,35 @@ const notesSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchNotes.pending, (state) => {
-            state.status = "loading";
+        builder.addCase(fetchActiveNotes.pending, (state) => {
+            state.statusActive = "loading";
             state.activeNotes = [];
         });
         builder.addCase(
-            fetchNotes.fulfilled,
+            fetchActiveNotes.fulfilled,
             (state, action: PayloadAction<INote[]>) => {
-                state.status = "success";
+                state.statusActive = "success";
                 state.activeNotes = action.payload;
             }
         );
-        builder.addCase(fetchNotes.rejected, (state) => {
-            state.status = "rejected";
+        builder.addCase(fetchActiveNotes.rejected, (state) => {
+            state.statusActive = "rejected";
             state.activeNotes = [];
+        });
+        builder.addCase(fetchArchiveNotes.pending, (state) => {
+            state.statusArchive = "loading";
+            state.archiveNotes = [];
+        });
+        builder.addCase(
+            fetchArchiveNotes.fulfilled,
+            (state, action: PayloadAction<INote[]>) => {
+                state.statusArchive = "success";
+                state.archiveNotes = action.payload;
+            }
+        );
+        builder.addCase(fetchArchiveNotes.rejected, (state) => {
+            state.statusArchive = "rejected";
+            state.archiveNotes = [];
         });
     },
 });

@@ -1,11 +1,22 @@
+// export interface INote {
+//     id: number;
+//     title: string;
+//     slug: string;
+//     content: string;
+//     category: string;
+//     creationDate: string;
+//     parsedDates: string[];
+// }
+
 export interface INote {
     id: number;
     title: string;
     slug: string;
     content: string;
     category: string;
-    creationDate: string;
-    parsedDates: string[];
+    parseddates: string[];
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface IStats {

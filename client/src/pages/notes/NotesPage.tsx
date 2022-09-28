@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import NotesList from "../../components/NotesList/NotesList";
-import Summary from "../../components/Summary/Summary";
-import { fetchNotes } from "../../service/NoteService";
+// import Summary from "../../components/Summary/Summary";
+import { fetchActiveNotes } from "../../service/NoteService";
 import { selectNotes } from "../../store/slices/notesSlice";
 import { useAppDispatch } from "../../store/store";
 import st from "./NotesPage.module.scss";
@@ -13,7 +13,7 @@ const NotesPage = () => {
 
     useEffect(() => {
         if (activeNotes.length < 2) {
-            dispatch(fetchNotes());
+            dispatch(fetchActiveNotes());
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -23,7 +23,7 @@ const NotesPage = () => {
         <main className={st.root}>
             <NotesList notes={activeNotes} type="active" />
 
-            <Summary />
+            {/* <Summary /> */}
         </main>
     );
 };

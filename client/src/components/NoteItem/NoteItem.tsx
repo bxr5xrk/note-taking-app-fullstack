@@ -70,24 +70,26 @@ interface NoteItemProps
         | "title"
         | "slug"
         | "content"
-        | "creationDate"
+        | "createdAt"
         | "category"
-        | "parsedDates"
+        | "parseddates"
+        | "id"
     > {
     type: "active" | "archive";
 }
 
 const NoteItem: FC<NoteItemProps> = ({
+    id,
     type,
     title,
     slug,
     content,
-    creationDate,
+    createdAt,
     category,
-    parsedDates,
+    parseddates,
 }) => {
     const navigate = useNavigate();
-    const [showOptions, setshowOptions] = useState(false);
+    const [showOptions, setShowOptions] = useState(false);
     const dispatch = useAppDispatch();
 
     return (
@@ -96,7 +98,7 @@ const NoteItem: FC<NoteItemProps> = ({
                 <div className={st.options}>
                     <span
                         title="delete"
-                        onClick={() => dispatch(deleteNote(slug))}
+                        onClick={() => dispatch(deleteNote(id))}
                     >
                         {svgIcons[0]}
                     </span>
@@ -113,7 +115,7 @@ const NoteItem: FC<NoteItemProps> = ({
                     {title}
                 </h2>
                 <svg
-                    onClick={() => setshowOptions(!showOptions)}
+                    onClick={() => setShowOptions(!showOptions)}
                     version="1.1"
                     viewBox="0 0 194.828 194.828"
                 >
@@ -138,10 +140,10 @@ const NoteItem: FC<NoteItemProps> = ({
             <p className={st.content}>{content}</p>
             <div className={st.stats}>
                 <p>{category}</p>
-                <p>{creationDate}</p>
+                <p>{createdAt}</p>
             </div>
             <div className={st.dates}>
-                {parsedDates.map((i) => (
+                {parseddates.map((i) => (
                     <span key={i}>{i}</span>
                 ))}
             </div>

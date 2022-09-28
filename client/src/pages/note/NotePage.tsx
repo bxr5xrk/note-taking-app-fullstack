@@ -120,7 +120,7 @@ const NotePage = () => {
                         />
                     </div>
 
-                    <p>{note.creationDate}</p>
+                    <p>{note.createdAt}</p>
 
                     <Select
                         category={category}

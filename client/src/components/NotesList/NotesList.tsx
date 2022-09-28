@@ -15,18 +15,19 @@ const NotesList: FC<NotesListProps> = ({ notes, type }) => {
 
     return (
         <div className={st.root}>
-            <h1>Notes</h1>
+            <h1>{type === "active" ? "Active notes" : "Archive notes"}</h1>
             <section className={st.list}>
                 {notes.map((i) => (
                     <NoteItem
                         type={type}
+                        id={i.id}
                         key={i.slug}
                         title={i.title}
                         slug={i.slug}
                         content={i.content}
-                        creationDate={i.creationDate}
+                        createdAt={i.createdAt}
                         category={i.category}
-                        parsedDates={i.parsedDates}
+                        parseddates={i.parseddates}
                     />
                 ))}
             </section>

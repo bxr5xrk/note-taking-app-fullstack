@@ -6,11 +6,20 @@ const $host = axios.create({
     baseURL: "http://localhost:5000/api/",
 });
 
-export const fetchNotes = createAsyncThunk(
-    "pizza/fetchNotesStatus",
+export const fetchActiveNotes = createAsyncThunk(
+    "pizza/active/notesStatus",
 
     async () => {
         const { data } = await $host.get("notes");
+        return data;
+    }
+);
+
+export const fetchArchiveNotes = createAsyncThunk(
+    "pizza/archive/notesStatus",
+
+    async () => {
+        const { data } = await $host.get("notes/archive");
         return data;
     }
 );
@@ -30,8 +39,8 @@ export const postNote = async ({
     return note;
 };
 
-export const deleteOneNote = async (slug: string) => {
-    await $host.delete(`notes/${slug}`).catch((e) => {
+export const deleteOneNote = async (id: number) => {
+    await $host.delete(`notes/${id}`).catch((e) => {
         console.log(e);
     });
 };

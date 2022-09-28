@@ -20,20 +20,18 @@ const NewNotePage: FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!content) {
+        const { data } = await postNote({ title, content, category });
+        if (data) {
+            dispatch(setActive(data));
+            navigate("/notes");
+        } else {
+            wrongTitle(titleRef);
+
             setValidate(true);
 
             setTimeout(() => {
                 setValidate(false);
             }, 1000);
-        } else {
-            const { data } = await postNote({ title, content, category });
-            if (data) {
-                dispatch(setActive(data));
-                navigate("/notes");
-            } else {
-                wrongTitle(titleRef);
-            }
         }
     };
 
@@ -62,10 +60,12 @@ const NewNotePage: FC = () => {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Enter content"
+                minLength={1}
+                maxLength={500}
             ></textarea>
 
             <button className="btn" type="submit">
-                submit
+                Submit
             </button>
         </form>
     );

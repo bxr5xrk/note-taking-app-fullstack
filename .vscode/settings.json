@@ -4,6 +4,7 @@
         "luxon",
         "metatype",
         "nestjs",
-        "parseddates"
+        "parseddates",
+        "reduxjs"
     ]
 }
