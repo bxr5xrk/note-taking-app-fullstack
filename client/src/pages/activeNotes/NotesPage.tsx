@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import NotesList from "../../components/NotesList/NotesList";
-// import Summary from "../../components/Summary/Summary";
 import { fetchActiveNotes } from "../../service/NoteService";
 import { selectNotes } from "../../store/slices/notesSlice";
 import { useAppDispatch } from "../../store/store";
@@ -26,8 +25,6 @@ const NotesPage = () => {
                 type="active"
                 status={statusActive}
             />
-
-            {/* <Summary /> */}
         </main>
     );
 };

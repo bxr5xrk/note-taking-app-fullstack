@@ -10,6 +10,10 @@ const headerItemsL = [
         item: "Archive",
         pathname: "/archive",
     },
+    {
+        item: "Summary",
+        pathname: "/stats",
+    },
 ];
 
 const headerItemsR = [

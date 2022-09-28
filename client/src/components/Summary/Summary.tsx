@@ -1,28 +1,22 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import st from "../NotesList/NotesList.module.scss";
 import st_ from "../NoteItem/NoteItem.module.scss";
 import { getStats } from "../../service/NoteService";
-import { useSelector } from "react-redux";
-import { selectNotes } from "../../store/slices/notesSlice";
 import { IStats } from "../../types";
-import { addStatsForArchive } from "../../utils/addStatsForArchive";
 
 const Summary = () => {
-    const { activeNotes, archiveNotes } = useSelector(selectNotes);
     const [stats, setStats] = useState<IStats[] | null>(null);
 
     useEffect(() => {
-        if (activeNotes.length > 1) {
-            getStats().then((i) => setStats(i));
-        }
-    }, [activeNotes]);
+        getStats().then((i) => setStats(i));
+    }, []);
 
     return (
         <div className={st.root}>
             <h1>Summary</h1>
             <section className={st.list}>
                 {stats &&
-                    addStatsForArchive(archiveNotes!, stats).map((i) => (
+                    stats.map((i) => (
                         <div key={i.category} className={st_.root}>
                             <h1>{i.category}</h1>
 
