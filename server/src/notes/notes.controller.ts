@@ -10,7 +10,7 @@ import {
 import { CreateNoteDTO } from "./dto/create-note.dto";
 import NotesService from "./notes.service";
 
-@Controller("notes")
+@Controller("api/notes")
 export class NotesController {
     constructor(private notesService: NotesService) {}
 
