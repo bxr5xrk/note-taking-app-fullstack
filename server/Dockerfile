@@ -6,7 +6,7 @@ COPY package.json ./
 
 COPY package-lock.json ./
 
-COPY ./ ./
+COPY ./src ./
 
 RUN npm i
 
