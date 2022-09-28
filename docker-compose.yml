@@ -3,15 +3,20 @@ version: '3.8'
 services:
   client:
     stdin_open: true
+    restart: always
     container_name: frontend
-    build: ./client
+    build:
+      dockerfile: Dockerfile
+      context: ./client
     volumes:
       - ./client:/app
 
   api:
     container_name: node
     restart: always
-    build: ./server
+    build:
+      dockerfile: Dockerfile
+      context: ./server
     ports:
       - ${PORT}:${PORT}
     depends_on:
