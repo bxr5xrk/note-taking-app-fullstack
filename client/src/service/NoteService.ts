@@ -63,6 +63,11 @@ export const patchNote = async (
     return note;
 };
 
+export const archiveOrUnArchive = async (id: number) => {
+    const note = await $host.patch(`notes/archive/${id}`).catch((e) => e);
+    return note;
+};
+
 export const getStats = async () => {
     const { data } = await $host.get("notes/stats");
     return data;

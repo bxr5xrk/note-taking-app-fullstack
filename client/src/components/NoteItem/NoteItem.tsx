@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { archiveOrUnArchive } from "../../service/NoteService";
 import { deleteNote, setArchive } from "../../store/slices/notesSlice";
 import { useAppDispatch } from "../../store/store";
 import { INote } from "../../types";
@@ -92,6 +93,14 @@ const NoteItem: FC<NoteItemProps> = ({
     const [showOptions, setShowOptions] = useState(false);
     const dispatch = useAppDispatch();
 
+    const handleArchive = async (id: number) => {
+        const { data } = await archiveOrUnArchive(id);
+
+        if (data) {
+            dispatch(setArchive(data));
+        }
+    };
+
     return (
         <div className={st.root}>
             {showOptions && (
@@ -104,7 +113,7 @@ const NoteItem: FC<NoteItemProps> = ({
                     </span>
                     <span
                         title="archive / unarchive"
-                        onClick={() => dispatch(setArchive(slug))}
+                        onClick={() => handleArchive(id)}
                     >
                         {type === "active" ? svgIcons[1] : svgIcons[2]}
                     </span>

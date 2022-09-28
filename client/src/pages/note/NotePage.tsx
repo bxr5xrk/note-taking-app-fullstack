@@ -62,19 +62,17 @@ const NotePage = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (content) {
-            if (note) {
-                const { data } = await patchNote(note.id, {
-                    title,
-                    content,
-                    category,
-                });
-                if (data) {
-                    dispatch(setActive(data));
-                    setIsEditable(false);
-                } else {
-                    wrongTitle(titleRef);
-                }
+        if (note) {
+            const { data } = await patchNote(note.id, {
+                title,
+                content,
+                category,
+            });
+            if (data) {
+                dispatch(setActive(data));
+                setIsEditable(false);
+            } else {
+                wrongTitle(titleRef);
             }
         }
     };
@@ -133,11 +131,13 @@ const NotePage = () => {
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="Enter content"
+                        maxLength={500}
+                        minLength={1}
                     ></textarea>
 
                     {isEditable && (
                         <button className="btn" type="submit">
-                            submit
+                            Submit
                         </button>
                     )}
                 </>

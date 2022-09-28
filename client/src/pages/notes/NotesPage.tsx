@@ -8,7 +8,7 @@ import { useAppDispatch } from "../../store/store";
 import st from "./NotesPage.module.scss";
 
 const NotesPage = () => {
-    const { activeNotes } = useSelector(selectNotes);
+    const { activeNotes, statusActive } = useSelector(selectNotes);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -21,7 +21,11 @@ const NotesPage = () => {
 
     return (
         <main className={st.root}>
-            <NotesList notes={activeNotes} type="active" />
+            <NotesList
+                notes={activeNotes}
+                type="active"
+                status={statusActive}
+            />
 
             {/* <Summary /> */}
         </main>

@@ -7,7 +7,7 @@ import { useAppDispatch } from "../../store/store";
 import st from "../notes/NotesPage.module.scss";
 
 const ArchivePage = () => {
-    const { archiveNotes } = useSelector(selectNotes);
+    const { archiveNotes, statusArchive } = useSelector(selectNotes);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -23,7 +23,11 @@ const ArchivePage = () => {
         //     {archiveNotes && <NotesList notes={archiveNotes} type="archive" />}
         // </section>
         <main className={st.root}>
-            <NotesList notes={archiveNotes} type="archive" />
+            <NotesList
+                notes={archiveNotes}
+                type="archive"
+                status={statusArchive}
+            />
         </main>
     );
 };

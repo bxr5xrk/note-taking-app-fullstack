@@ -75,12 +75,15 @@ class NotesService {
         if (validate) {
             throw new ValidationException(title + " already exists");
         } else {
-            return await this.activeNoteRep.update(
+            const note = await this.activeNoteRep.update(
                 { ...createNoteObj(dto) },
                 {
                     where: { id: id },
+                    returning: true,
                 }
             );
+
+            return note[1][0];
         }
     }
 
@@ -145,8 +148,12 @@ class NotesService {
 
         const updateMe =
             type === "archive" ? this.archiveNoteRep : this.activeNoteRep;
+        const destroyMe =
+            type === "archive" ? this.activeNoteRep : this.archiveNoteRep;
 
-        await updateMe.update(
+        await destroyMe.destroy({ where: { id: id } });
+
+        const returningNote = await updateMe.update(
             {
                 id,
                 title,
@@ -159,13 +166,11 @@ class NotesService {
             },
             {
                 where: { id: newNote.id },
+                returning: true,
             }
         );
 
-        const destroyMe =
-            type === "archive" ? this.activeNoteRep : this.archiveNoteRep;
-
-        return await destroyMe.destroy({ where: { id: id } });
+        return returningNote[1][0];
     }
 }
 
