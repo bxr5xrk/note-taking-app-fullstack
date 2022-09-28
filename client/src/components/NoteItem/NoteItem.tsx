@@ -149,7 +149,7 @@ const NoteItem: FC<NoteItemProps> = ({
             <p className={st.content}>{content}</p>
             <div className={st.stats}>
                 <p>{category}</p>
-                <p>{createdAt}</p>
+                <p>{createdAt.match(/(.+)T/g)?.join("").slice(0, -1)}</p>
             </div>
             <div className={st.dates}>
                 {parseddates.map((i) => (
