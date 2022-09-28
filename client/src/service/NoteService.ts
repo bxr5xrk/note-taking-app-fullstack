@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const $host = axios.create({
-    baseURL: "http://localhost:5000/api/",
+    baseURL: `http://172.20.0.4:5000/api/`,
 });
 
 export const fetchActiveNotes = createAsyncThunk(
