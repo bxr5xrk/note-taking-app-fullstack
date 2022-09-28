@@ -105,7 +105,11 @@ class NotesService {
     }
 
     async slugExists(title: string, type: "create" | "update") {
-        const prettifyTitle = title.replace(/[^\w ]/g, "");
+        const prettifyTitle = title
+            .replace(/[^\w ]/g, "")
+            .split(" ")
+            .filter((i) => i)
+            .join(" ");
         const slug = prettifyTitle.toLowerCase().split(" ").join("-");
 
         const allSlugs = await Promise.all([

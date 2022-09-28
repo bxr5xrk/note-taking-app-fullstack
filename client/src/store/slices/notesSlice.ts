@@ -2,10 +2,7 @@ import { fetchArchiveNotes } from "./../../service/NoteService";
 import { INote } from "./../../types/index";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import {
-    deleteOneNote,
-    fetchActiveNotes,
-} from "../../service/NoteService";
+import { deleteOneNote, fetchActiveNotes } from "../../service/NoteService";
 
 interface notesProps {
     activeNotes: INote[];
@@ -73,6 +70,7 @@ const notesSlice = createSlice({
                         state.archiveNotes.indexOf(inArchive),
                         1
                     );
+                    state.activeNotes = [...state.activeNotes, inArchive];
                 } else {
                     state.archiveNotes = [
                         ...state.archiveNotes,
