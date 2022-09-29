@@ -21,6 +21,10 @@ import { NotesModule } from "./notes/notes.module";
             database: process.env.POSTGRES_DB,
             models: [ActiveNote, ArchiveNote],
             autoLoadModels: true,
+            dialectOptions: {
+                ssl: true,
+                native: true,
+            },
         }),
         NotesModule,
     ],
