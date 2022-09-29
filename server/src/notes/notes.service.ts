@@ -55,7 +55,12 @@ class NotesService {
 
     async getNoteBySlug(slug: string) {
         const note = await this.activeNoteRep.findOne({ where: { slug } });
-        return note;
+
+        if (!note) {
+            throw new ValidationException("Wrong note slug");
+        } else {
+            return note;
+        }
     }
 
     async deleteById(id: number) {
